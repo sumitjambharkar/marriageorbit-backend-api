@@ -5,9 +5,16 @@ const bodyParser = require('body-parser')
 const nodemailer = require("nodemailer")
 const textflow = require("textflow.js");
 require("dotenv").config();
-const cors = require("cors")
-const app = express()
+
 const port = process.env.PORT || 8000;
+const bodyparser = require('body-parser')
+
+const app = express()
+const cors = require("cors")
+
+app.use(bodyparser.urlencoded({ extended: false }))
+
+app.use(bodyparser.json())
 
 textflow.useKey(process.env.TEXTFLOW_API);
 
@@ -61,7 +68,7 @@ app.post("/send-email", function (req, response) {
 // End send Email message
 
 // Start Upload Resume
-app.get("/resume", upload.array('attachments'),(req, res) => {
+app.post("/resume", upload.array('attachments'),(req, res) => {
   let {email,name,position} = req.body
   let attachments = []
   for (let i = 0; i < req.files.length; i++) {
@@ -121,9 +128,9 @@ app.post("/send-otp", async (req, res) => {
   }
   const result = await textflow.sendVerificationSMS(`+91${number}`, verificationOptions);
   if (result.ok) {
-      return res.status(result.status).json(result.message)
+      res.status(result.status).json(result.message)
   } else {
-      return res.status(result.status).json(result.message)
+      res.status(result.status).json(result.message)
   }
 })
 // End Send OTP Message
@@ -139,6 +146,7 @@ app.post("/verify-otp", async (req, res) => {
   }
 })
 // End Verify OTP Message
+
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
