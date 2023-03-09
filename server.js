@@ -111,8 +111,8 @@ app.post("/resume", upload.array('attachments'), (req, res) => {
 // Start Send OTP Message
 
 app.post('/send-otp', (req, res) => {
-  let radom = Math.floor(Math.random() * 900000) + 10000
-  sendMessage(radom, req.body.number, res)
+  // let radom = Math.floor(Math.random() * 900000) + 10000
+  sendMessage(req.body.radom, req.body.number, res)
 })
 function sendMessage(radom, number, res) {
   var options = {
